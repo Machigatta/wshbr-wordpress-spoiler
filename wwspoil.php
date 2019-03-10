@@ -55,7 +55,7 @@ add_action('the_title', 'wwspoil_add_to_title');
 function wwspoil_add_to_the_thumbnail( $html, $post_id, $post_thumbnail_id, $size, $attr) {
 	$post_id = get_the_ID();
 	$isSpoiler = get_post_meta($post_id,"isSpoiler",true);
-	if(is_front_page() && $isSpoiler == "1"){
+	if(!is_single() && $isSpoiler == "1"){
 		$html = $html . "<img class='spoiler-image' src='/wp-content/plugins/". basename(dirname(__FILE__))."/assets/img/spoiler.png'>";
 	}else{
 
