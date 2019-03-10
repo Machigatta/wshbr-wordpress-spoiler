@@ -5,8 +5,8 @@ Plugin URI: https://github.com/Machigatta/wshbr-wordpress-spoiler
 Description: wshbr.de - Provides a spoiler-marker for the thumbnails
 Author: Machigatta
 Author URI: https://machigatta.com/
-Version: 1.0
-Stable Tag: 1.0
+Version: 1.1
+Stable Tag: 1.1
 */
 function wwspoil_init() {
 	$plugin_dir = basename(dirname(__FILE__));
@@ -39,6 +39,31 @@ function wwspoil_meta_box($post) {
 	<?php
 }
 add_action( 'save_post', 'wwspoil_field_data' );
+
+//activate in settings - TO:DO
+function wwspoil_add_to_title($title) {
+	$post_id = get_the_ID();
+	$isSpoiler = get_post_meta($post_id,"isSpoiler",true);
+	if(is_front_page() && $isSpoiler == "1"){
+		$title = $title;
+	}
+
+	return $title;
+}
+add_action('the_title', 'wwspoil_add_to_title');
+
+function wwspoil_add_to_the_thumbnail( $html, $post_id, $post_thumbnail_id, $size, $attr) {
+	$post_id = get_the_ID();
+	$isSpoiler = get_post_meta($post_id,"isSpoiler",true);
+	if(is_front_page() && $isSpoiler == "1"){
+		$html = $html . "<img class='spoiler-image' src='/wp-content/plugins/". basename(dirname(__FILE__))."/assets/img/spoiler.png'>";
+	}else{
+
+	}
+
+	return $html;
+}
+add_action('post_thumbnail_html', 'wwspoil_add_to_the_thumbnail',20,5);
 
 function wwspoil_field_data($post_id) {
 	    // check if this isn't an auto save
