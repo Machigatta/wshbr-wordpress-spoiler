@@ -5,8 +5,8 @@ Plugin URI: https://github.com/Machigatta/wshbr-wordpress-spoiler
 Description: wshbr.de - Provides a spoiler-marker for the thumbnails
 Author: Machigatta
 Author URI: https://machigatta.com/
-Version: 1.1
-Stable Tag: 1.1
+Version: 1.2
+Stable Tag: 1.2
 */
 function wwspoil_init() {
 	$plugin_dir = basename(dirname(__FILE__));
@@ -56,11 +56,16 @@ function wwspoil_add_to_the_thumbnail( $html, $post_id, $post_thumbnail_id, $siz
 	$post_id = get_the_ID();
 	$isSpoiler = get_post_meta($post_id,"isSpoiler",true);
 	if(!is_single() && $isSpoiler == "1"){
-		$html = $html . "<img class='spoiler-image' src='/wp-content/plugins/". basename(dirname(__FILE__))."/assets/img/spoiler.png'>";
+		$spoiler_html = "<img class='spoiler-image' src='/wp-content/plugins/". basename(dirname(__FILE__))."/assets/img/spoiler.png'>";
+		if(isset($attr["class"])){
+			if(strpos($attr["class"],"no-spoiler-image") !== false ){
+				$spoiler_html = "";
+			}
+		}
+		$html = $html . $spoiler_html;
 	}else{
 
 	}
-
 	return $html;
 }
 add_action('post_thumbnail_html', 'wwspoil_add_to_the_thumbnail',20,5);
